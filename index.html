@@ -119,7 +119,7 @@
         </div>
         <div class="option">
           <label class="option-label" for="option2">Option 2 Odds:</label>
-          <input class="option-input" placeholder="ex) 2.25" type="number" id="option2" name="option2">
+          <input class="option-input" type="number" id="option2" name="option2">
         </div>
       </div>
       <div id="buttons">
@@ -152,7 +152,7 @@
     document.querySelectorAll('input[name="oddsFormat"]').forEach((elem) => {
       elem.addEventListener("change", function(event) {
         oddsFormat = event.target.value;
-        document.querySelectorAll('.option-input').forEach((input) => {
+        document.querySelectorAll('#option1').forEach((input) => {
           input.placeholder = oddsFormat === 'decimal' ? 'ex) 2.25' : 'ex) +125';
         });
       });
@@ -166,7 +166,7 @@
       newOption.classList.add('option');
       newOption.innerHTML = `
         <label class="option-label" for="option${optionCount}">Option ${optionCount} Odds:</label>
-        <input class="option-input" type="number" id="option${optionCount}" placeholder="ex) 2.25" name="option${optionCount}">
+        <input class="option-input" type="number" id="option${optionCount}" name="option${optionCount}">
       `;
       document.getElementById('options').appendChild(newOption);
     }
