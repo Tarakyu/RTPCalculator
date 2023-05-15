@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Online RTP calculator for sports betting">
+  <meta name="keywords" content="RTP, Return to Player, Odds, Calculator, Sports Betting">
+  <meta name="author" content="Tarakyu">
+  <title>RTP Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: white;
+      background-color: black;
+      margin: 0;
+      padding: 0;
+    }
+
+    #header {
+      padding: 20px;
+      text-align: center;
+      background-color: #333;
+      color: white;
+      font-size: 2em;
+    }
+
+    #contents {
+      max-width: 800px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #options {
+      margin: 20px;
+    }
+
+    .option {
+      margin-bottom: 10px;
+    }
+
+    #buttons {
+      display: flex;
+      justify-content: center
+    }
+
+    label, input {
+      display: block;
+      width: 200px;
+      font-size: 1.2em;
+      margin: auto;
+    }
+
+    input::-webkit-inner-spin-button,
+    input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    button {
+      margin: 10px 10px;
+      padding: 10px 20px;
+      font-size: 1em;
+      color: #333;
+      background-color: white;
+      display: block;
+    }
+
+    #rtp {
+      margin: 20px 0;
+      font-size: 3em;
+    }
+
+    #footer {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="header">RTP Calculator</div>
+    <div id="contents">
+      <div id="options">
+        <div class="option">
+          <label for="option1">Option 1 Odds:</label>
+          <input type="number" id="option1" name="option1">
+        </div>
+        <div class="option">
+          <label for="option2">Option 2 Odds:</label>
+          <input type="number" id="option2" name="option2">
+        </div>
+      </div>
+      <div id="buttons">
+        <button onclick="addOption()">Add Option</button>
+        <button onclick="removeOption()">Remove Option</button>
+        <button onclick="calculateRTP()">Calculate RTP</button>
+      </div>
+      <h2 id="rtp">RTP: </h2>
+
+      <h3> What is RTP? </h3>
+
+      <p>
+        Return to Player, often referred to as RTP, is a term that's commonly used in the betting industry. In the context of sports betting, RTP represents the theoretical percentage of all wagered money that a sportsbook will pay back to bettors over time. For instance, if a sportsbook has an RTP of 95%, it means that, theoretically, for every $100 wagered, you can expect to get $95 back over time. However, it's essential to understand that this is a long-term average and not a guarantee of what will happen in each individual bet.
+      </p>
+      <p>
+      Why is RTP important in sports betting? Well, it can give you a rough idea of how much you might expect to win or lose over an extended period of betting. A sportsbook with a higher RTP should, in theory, return more winnings relative to the amount of money wagered compared to a sportsbook with a lower RTP. However, since RTP is calculated over a long period and many bets, there can be significant variation in the short term.
+      </p>
+      <p>
+      Remember, while RTP can be a useful guide, it's not a guarantee of what will happen each time you bet. Betting should be an enjoyable activity and always within your budget. It's crucial to maintain a responsible approach to betting: never bet more than you can afford to lose, and always be prepared for the outcome that you may not win.
+      </p>
+      <div id="footer">
+        contact: worrasong@gmail.com
+      </div>
+    </div>
+
+  
+  <script>
+    let optionCount = 2;
+
+    function addOption() {
+      optionCount++;
+      const newOption = document.createElement('div');
+      newOption.classList.add('option');
+      newOption.innerHTML = `
+        <label for="option${optionCount}">Option ${optionCount} Odds:</label>
+        <input type="number" id="option${optionCount}" name="option${optionCount}">
+      `;
+      document.getElementById('options').appendChild(newOption);
+    }
+
+    function removeOption() {
+      if (optionCount > 2) {
+        const optionToRemove = document.querySelector(`#options .option:last-child`);
+        optionToRemove.parentNode.removeChild(optionToRemove);
+        optionCount--;
+      }
+    }
+
+    function calculateRTP() {
+      let total = 0;
+      const rtpElement = document.getElementById('rtp');
+      for (let i = 1; i <= optionCount; i++) {
+        const odds = document.getElementById(`option${i}`).value;
+        if (odds) {
+          total += 1 / odds;
+        }
+      }
+      const rtp = 1 / total * 100;
+      rtpElement.textContent = `RTP: ${rtp.toFixed(2)}%`;
+      let color = 'red';
+      let text = 'Poor';
+      if (rtp >= 95) {
+        color = '#3b96ff';
+        text = 'Best';
+      } else if (rtp >= 90) {
+        color = '#42ffd3';
+        text = 'Good';
+      } else if (rtp >= 80) {
+        color = 'orange';
+        text = 'Fair';
+      }
+
+      rtpElement.style.color = color;
+      rtpElement.textContent += ` (${text})`;
+    }
+    </script>
+  </body>
+</html>
