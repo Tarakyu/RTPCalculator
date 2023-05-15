@@ -32,6 +32,22 @@
       align-items: center;
     }
 
+    #oddsForm {
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .input-field {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .input-field label {
+      margin-right: 10px;
+    }
+
     #options {
       margin: 20px;
     }
@@ -45,7 +61,7 @@
       justify-content: center
     }
 
-    label, input {
+    .option-label, .option-input {
       display: block;
       width: 200px;
       font-size: 1.2em;
@@ -88,14 +104,22 @@
 <body>
   <div id="header">RTP Calculator</div>
     <div id="contents">
+      <form id="oddsForm">
+        <div class="input-field">
+          <input type="radio" id="decimal" name="oddsFormat" value="decimal" checked>
+          <label for="decimal">Decimal Odds</label>
+          <input type="radio" id="american" name="oddsFormat" value="american">
+          <label for="american">American Odds</label>
+        </div>
+      </form>
       <div id="options">
         <div class="option">
-          <label for="option1">Option 1 Odds:</label>
-          <input type="number" id="option1" name="option1">
+          <label class="option-label" for="option1">Option 1 Odds:</label>
+          <input class="option-input" placeholder="ex) 2.25" type="number" id="option1" name="option1">
         </div>
         <div class="option">
-          <label for="option2">Option 2 Odds:</label>
-          <input type="number" id="option2" name="option2">
+          <label class="option-label" for="option2">Option 2 Odds:</label>
+          <input class="option-input" placeholder="ex) 2.25" type="number" id="option2" name="option2">
         </div>
       </div>
       <div id="buttons">
@@ -123,6 +147,17 @@
 
   
   <script>
+    let oddsFormat = document.querySelector('input[name="oddsFormat"]:checked').value;
+
+    document.querySelectorAll('input[name="oddsFormat"]').forEach((elem) => {
+      elem.addEventListener("change", function(event) {
+        oddsFormat = event.target.value;
+        document.querySelectorAll('.option-input').forEach((input) => {
+          input.placeholder = oddsFormat === 'decimal' ? 'ex) 2.25' : 'ex) +125';
+        });
+      });
+    });
+
     let optionCount = 2;
 
     function addOption() {
@@ -130,8 +165,8 @@
       const newOption = document.createElement('div');
       newOption.classList.add('option');
       newOption.innerHTML = `
-        <label for="option${optionCount}">Option ${optionCount} Odds:</label>
-        <input type="number" id="option${optionCount}" name="option${optionCount}">
+        <label class="option-label" for="option${optionCount}">Option ${optionCount} Odds:</label>
+        <input class="option-input" type="number" id="option${optionCount}" placeholder="ex) 2.25" name="option${optionCount}">
       `;
       document.getElementById('options').appendChild(newOption);
     }
@@ -148,7 +183,19 @@
       let total = 0;
       const rtpElement = document.getElementById('rtp');
       for (let i = 1; i <= optionCount; i++) {
-        const odds = document.getElementById(`option${i}`).value;
+        let odds = document.getElementById(`option${i}`).value;
+        if (oddsFormat === 'american') {
+          if (Math.abs(odds) < 100) {
+            alert("Odds Format error!");
+            return;
+          }
+          odds = odds > 0 ? (odds / 100) + 1 : (100 / Math.abs(odds)) + 1;
+        } else {
+          if (odds < 0) {
+            alert("Odds Format error!");
+            return;
+          }
+        }
         if (odds) {
           total += 1 / odds;
         }
